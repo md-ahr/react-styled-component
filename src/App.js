@@ -1,25 +1,28 @@
-import logo from './logo.svg';
-import './App.css';
+import { useReducer } from 'react';
+import { ThemeProvider } from 'styled-components';
+import { reducer, initialState } from './reducer/themeReducer';
+import Tutorial from './components/Tutorial';
+import GlobalStyle from './components/styles/Global.styles';
+import { ThemeContext } from './context/ThemeContext';
+import { light, dark } from './themeColor';
 
 function App() {
+
+  const toggleTheme = () => {
+    dispatch({ type: 'TOGGLE_THEME' });
+  };
+
+  const [state, dispatch] = useReducer(reducer, initialState);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    <ThemeContext.Provider value={{ theme: state.theme, toggleTheme }}>
+      <GlobalStyle />
+      <ThemeProvider theme={ state.theme === 'dark' ? dark : light }>
+        <Tutorial />
+      </ThemeProvider>
+    </ThemeContext.Provider>
+  )
+
 }
 
 export default App;
